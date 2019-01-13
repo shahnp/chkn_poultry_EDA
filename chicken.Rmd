@@ -1,179 +1,273 @@
 ---
-title: "Why is chicken so popular as poultry products compare to rest."
+title: "Chicken More Popular Than Beef In U.S. For First Time In 100 Years."
 output:
-  word_document: default
+  html_document:
+    code_folding: hide
+    fig_height: 6
+    fig_width: 8
+    height: 100%;
+    highlight: textmate
+    left: 0;
+    line-height: 20px;
+    margin: auto;
+    max-width: 800px;
+    number_sections: yes
+    position: fixed;
+    prettydoc::html_pretty:
+    theme: sandstone
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    top: 0;
+    warning: no
+    width: 200px;
   pdf_document:
-    df_print: pander
+    toc: yes
+    toc_depth: '4'
 ---
-** STEP 1: ** 
-We will extract data from source ["http://www.nationalchickencouncil.org/about-the-industry/statistics/per-capita-consumption-of-poultry-and-livestock-1965-to-estimated-2018-in-pounds/"]
 
-** Title should be : Per Capita Consumption of Poultry and Livestock, 1965 to Estimated 2018, in Pounds. ** 
+<style>
+body {
+text-align: justify}
+</style>
+
+![](https://images.firstwefeast.com/complex/images/c_limit,f_auto,fl_lossy,q_auto,w_1100/fwf_chickenconqueredameria_o8dpw7/chicken)
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE,progress = FALSE, verbose = FALSE)
+```
+
+
+# **Introduction**:
+
+Kids love them, fast food restaurants count on them and advertisers use them to lure in millions of hungry Americans every year.As more consumers demand on-the-go alternatives to fattier beef and pork dishes, chicken nuggets and tenders reign supreme.
+
+The chickens that saved Western civilization were discovered, according to legend, by the side of a road in Greece in the first decade of the fifth century B.C.Chicken is the ubiquitous food of our era, crossing multiple cultural boundaries with ease. With its mild taste and uniform texture, chicken presents an intriguingly blank canvas for the flavor palette of almost any cuisine.How did the chicken achieve such cultural and culinary dominance? It is all the more surprising in light of the belief by many archaeologists that chickens were first domesticated not for eating but for cockfighting. Until the advent of large-scale industrial production in the 20th century, the economic and nutritional contribution of chickens was modest.
+
+The modern American chicken, Gallus gallus domesticus, has come a long way from the jungles of Southeast Asia from which its ancestors originated some eight- to ten-thousand years ago. Carried west over the centuries by Harappan merchants, Persian caravans, and Roman armies, the chicken finally arrived in the New World in 1493 as a passenger on Christopher Columbus’ second voyage to the Americas.
+
+**Some Highlights**
+
+- Slaves saw the economic viability of chicken.
+- Those with an even greater entrepreneurial spirit took to roads in town and country alike to sell chicken and other foods. These individuals quickly become known as "the general chicken merchants" of the South.
+-Chicken salad became a symbol of wealth for the 1%.
+-A Canadian invented an artificial incubator and became king of the Hen Men.
+- This invention singlehandedly changed the future of chicken consumption. Farmers and their families could now easily hatch hundreds of chicks at once.
+-The chicken got bigger breasts thanks to the U.S. Government’s "Chicken of Tomorrow" competition. 
+- Not only did the "Chicken of Tomorrow" winners grow bigger in less time on less feed as the contest's originators desired, but also the texture and size of its wondrously huge breasts delighted the American eater, who was used to seeing a chicken as scrawny.
+- The bird became a nugget.
+- Thanks to the McNugget, this hamburger chain instantly became the second biggest user of chicken on planet earth, trailing only behind the fried-chicken powerhouse, KFC.
+
+As demand for nuggets took off, other forms of ready-to-cook and ready-to-eat chicken products became available, including tenders and breast fillet sandwiches. When the market expanded, so did the need to produce meatier chickens at a faster rate.
+
+
+```{r, message= FALSE, warning= FALSE}
+# Import libraries
+library("rvest") 
+library("tidyverse") 
+library("dplyr")
+library("skimr")
+library("janitor")
+library("ggthemes")
+library("plotly")
+library("kableExtra")
+library("DataExplorer")
+library("formattable")
+```
+
+# **Data Source**
+We will read the data from the websource itself.We will extract our data from [National Chicken Council.]("http://www.nationalchickencouncil.org/about-the-industry/statistics/per-capita-consumption-of-poultry-and-livestock-1965-to-estimated-2018-in-pounds/")
 
 You can see table data upto 2018 and forcasted for 2019.
-Note: All poultry and livestock products are on a retail weight basis, except “other chicken” and “turkey” which are reported by USDA on a carcass-weight basis.
+>Note: All poultry and livestock products are on a retail weight basis, except “other chicken” and “turkey” which are reported by USDA on a carcass-weight basis.
 Fish/shellfish is reported by The National Marine Fisheries Service on an edible weight basis.
 
-** NOTE **
-* A broiler (Gallus gallus domesticus) is any chicken that is bred and raised specifically for meat production *
-I just run chicken and broilers,although they are same but want to show the market consumption for meat products go hand in hand and I am not setting up any biases.
+**NOTE**
+*A broiler (Gallus gallus domesticus) is any chicken that is bred and raised specifically for meat production*
 
-# Import libraries for rendering to pdf or html output
-```{r}
-library("knitr")
-library("rmarkdown")
-library("markdown")
-```
-# setiing up parameters
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(progress = FALSE, verbose = FALSE)
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
-```
-# Lets import necessary packages 
-```{r}
-library(rvest) # Good for webscrapping
-library(tidyverse) # We can use package like dplyr, ggplot 
-```
-# Data source
-
-We will read the data from the websource itself.
+Although chicken and broilers, are same we will not merge them together and show in graph independently.
 
 Need to address the Question before we dive in data??
-Americans buy more chicken than any other food at the center of the plate. Chicken consumption per capita has increased nearly every year since the mid 1960’s, while red meat consumption has steadily declined.
+Americans buy more chicken than any other food at the center of the plate. Chicken consumption per capita has increased nearly every year since the mid 1960’s, while red meat consumption has steadily declined. Are more people eating less meat or different kinds of meat. 
 
 We will gather data to show these output.
 
-** Whenever you are trying to show visually any Time Series graph use Line plot to convey. Line plots are always good visuallization for Time Series Data like this. **
-# Per capita consumption
+*Whenever you are trying to show visually any Time Series graph use Line plot to convey. Line plots are always good visuallization for Time Series Data like this.*
+
 ```{r}
 url <- "https://www.nationalchickencouncil.org/about-the-industry/statistics/per-capita-consumption-of-poultry-and-livestock-1965-to-estimated-2012-in-pounds/"
+```
 
-```
-# Lets read the dataframe with the help of read_html
+
 ```{r}
-poultry_list <- read_html(url) %>%  # Read the data from url and convert it into html_table
-  html_table()
+# Lets read the dataframe with the help of read_html.
+poultry_list <- read_html(url) %>%  # Read from url and convert it into html_table
+                      html_table()
 ```
-# Lets convert into dataframe 
+
+
 ```{r}
+#Lets convert into dataframe.
 poultry_df <- data.frame(poultry_list[[1]]) # We will convert first list into dataframe.
-head(poultry_df) # Lets look at first six rows
 ```
-# Look at the tail of dataframe: Good Practice 
+
 ```{r}
-tail(poultry_df) # See the last two rows in Year column it says estimate 2018 and forcast 2019 as Date column so we need to fix that before we convert whole column into date object
+kable(head(poultry_df,10)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(10:10, bold = T, color = "white", background = "black") %>% 
+  scroll_box(width = "800px", height = "200px")
 ```
-# Fixing Year column
-* Lets remove the word estimate and forecast for now. We just want year to be numeric rather than character
+
+# **Info about datasets**
+
 ```{r}
-poultry_df$Year <- gsub("[^0-9]","",poultry_df$Year) # gsub substitutes before with after.
-tail(poultry_df)
+# Writing function to get info about our datasets
+df_info <- function(x) {
+  data  <- as.character(substitute(x))  ##data frame name
+  size <- format(object.size(x), units="Mb")  ##size of data frame in Mb
+  
+  plot_missing(data.frame(x)) # Vizualization of Missing Data.
+  
+  ##column information
+  column.info <- data.frame( column        = names(sapply(x, class)),
+                             #class         = sapply(x, class),
+                             unique.values = sapply(x, function(y) length(unique(y))),
+                             missing.count = colSums(is.na(x)),
+                             missing.pct   = round(colSums(is.na(x)) / nrow(x) * 100, 2))
+                            
+  row.names(column.info) <- 1:nrow(column.info)
+  list(data.frame     = data.frame(name=data, size=size),
+       dimensions     = data.frame(rows=nrow(x), columns=ncol(x)),
+       column.details = column.info)
+}
+
+# Information about the datasets
+df_info(poultry_df)
 ```
+
+```{r}
+poultry_df <- clean_names(poultry_df)
+```
+
+```{r}
+#Look at the tail of dataframe: Good Practice 
+kable(tail(poultry_df,5)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(4:5,  bold = T, color = "black", background = "yellow") %>% 
+  scroll_box(width = "800px", height = "200px")
+```
+
+See the last two rows in year column it says estimate 2018 and forcast 2019 as Date column so we need to fix that before we convert whole column into date object
+
+# **Data preprocessing**
+
+
+*Lets remove the word estimate and forecast for now. We just want year to be numeric rather than character*
+```{r}
+# Cleaning year column
+poultry_df$year <- gsub("[^0-9]","",poultry_df$year) # keep only digit
+kable(tail(poultry_df,5)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(4:5, bold = T, color = "black", background = "lightgreen") %>% 
+  scroll_box(width = "800px", height = "200px")
+```
+
+
+```{r, include= FALSE}
 # Lets look at range and class column
-```{r}
-range(poultry_df$Year) # Lets look the range of year, We are close to end of 2018 as of today.
-class(poultry_df$Year) # Also notice that R doesnt render date when importing so its always better to check before you do any analysis.
+range(poultry_df$year) # Lets look the range of year, We are close to end of 2018 as of today.
+class(poultry_df$year) # Also notice that R doesnt render date when importing so its always better to check before you do any analysis.
+
+# Lets fix year column
+poultry_df$year <- as.numeric(poultry_df$year)
+class(poultry_df$year)
+range(poultry_df$year)
 ```
-# Lets fix year column 
-* As it says character we need to convert it into numeric
+
+# **Skim our datasets** 
 ```{r}
-poultry_df$Year <- as.numeric(poultry_df$Year)
-class(poultry_df$Year)
-range(poultry_df$Year)
-```
-# lets visualize our dataset with skimr package
-```{r}
-library(skimr) # ver good summarised way of looking dataframe.
 skim(poultry_df)
 ```
-# Lets clean up the column name
-* There is one more column called other.chicken. I guess its just different type. You can merge these two table and make one whole chicken but for now we will leave it like that without creating biases. So we will leave other chicken and total chicken for now.
-```{r}
-poultry_df <- poultry_df %>% 
-              rename(Seafood = Commercial.Fish...Shell.Fish,  # We will just call it seafood
-                     Chicken = Total.Chicken)
-colnames(poultry_df)
-```
-# Normalization before comparison
-We need to calculate the percentage change from the baseline. otherwise our plot will start from different bases. So lets normalise the data.
+
+There is one more column called other.chicken. I guess its just different type. You can merge these two table and make one whole chicken but for now we will leave it like that without creating biases. So we will leave other chicken and total chicken for now.
+
+# **Normalization before comparison**
+
+We need to calculate the percentage change from the baseline. otherwise our plot will start from different bases. So lets normalise the data. 
 look into first line of the year 1960.
-Beef,   Pork,   Chicken, Broilers,  Turkey,  Seafood
-```{r}
-head(poultry_df,1)
-```
-# Normalization
 ```{r}
 poultry_df <- poultry_df %>% 
-  select(Year, Beef, Pork, Broilers, Chicken, Turkey, Seafood ) %>%  # We will focus on 5 main categories.
-  mutate(percent_change_Beef= (Beef- 63.3)/63.3*100 , 
-        percent_change_Pork = (Pork - 59.1)/59.1 *100,
-        percent_change_Broilers = (Broilers - 23.6)/23.6 * 100,
-        percent_change_Chicken = (Chicken - 28)/28 *100,
-        percent_change_Turkey = (Turkey - 6.2)/6.2 *100,
-        percent_change_Seafood = (Seafood - 10.3)/10.3 *100)
+  rename(seafood = commercial_fish_shell_fish) %>% 
+  select(year, beef, pork, broilers, total_chicken, turkey, seafood) %>%  # We will focus on 5 main categories. So we will take first 5 values and normalise so that all start from same base.
+  mutate(pcnt_change_beef= (beef- 63.3)/63.3*100 , 
+        pcnt_change_pork = (pork - 59.1)/59.1 *100,
+        pcnt_change_broilers = (broilers - 23.6)/23.6 * 100,
+        pcnt_change_chicken = (total_chicken - 28)/28 *100,
+        pcnt_change_turkey = (turkey - 6.2)/6.2 *100,
+        pcnt_change_seafood = (seafood - 10.3)/10.3 *100)
        # value of particular year - base value then divide by base value * 100 % 
-head(poultry_df, 3)
-# Look at first line will be all zero as baseline and look at second line it shows the change from last year.
+
+# HEAD
+kable(head(poultry_df,5)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(5:5, bold = T, color = "white", background = "black") %>% 
+  scroll_box(width = "800px", height = "200px")
 ```
-# Lets look at colnames
-```{r}
-colnames(poultry_df)
+
+```{r, include= FALSE}
+a <- poultry_df %>% 
+    select(-c(8:13)) %>% 
+    gather("type_of_meat", "poultry_df", 2:7)
+glimpse(a)
+a <- a %>% group_by(type_of_meat)
+unique(a$type_of_meat)
 ```
-# Lets confirm unique type of meat so that we can get gist of it.
-** Sanity check ** 
-```{r, echo=FALSE}
-#unique(percent_poultry_df$type_of_meat)
-```
-# creating a subset for just raw sales for graphing
-```{r}
+
+Lets confirm unique type of meat so that we can get gist of it.
+
+```{r, include = FALSE}
+# creating a subset for just raw sales to plot
 colnames(poultry_df)
 raw_sales <- poultry_df %>% 
               select(-c(8:13)) %>% 
-  gather("type_of_meat", "poultry_df", 2:7) # will create two new columns type_of_meat & poultry_df and gather them
-tail(raw_sales)
+  gather("type_of_meat", "poultry_df", 2:7) # create two new columns type_of_meat & poultry_df and gather them
 unique(raw_sales$type_of_meat)
 ```
-# Finding Intersection and rendering after initial plot
-I have created this plot after finding out the intersection on rough draft as you will see below in ggplot that there is intersection of chicken with pork and with beef in year 1982 and 1992
+
+
 ```{r}
-raw_sales_pork <- raw_sales %>% filter(Year >= "1982" & type_of_meat == "Pork")
-raw_sales_beef <- raw_sales %>% filter(Year >= "1992" & type_of_meat == "Beef")
-raw_sales_chicken <- raw_sales %>% filter(Year >= "1982" & type_of_meat == "Chicken")
+raw_sales_pork <- raw_sales %>% filter(year >= "1982" & type_of_meat == "pork")
+raw_sales_beef <- raw_sales %>% filter(year >= "1992" & type_of_meat == "beef")
+raw_sales_chicken <- raw_sales %>% filter(year >= "1982" & type_of_meat == "total_chicken")
 ```
-# Plot
-```{r}
+
+# **Plot**
+
+```{r, message= FALSE, warning= FALSE}
 g_sales <- ggplot()+
-  geom_line(data = raw_sales, aes ( x= Year, y = poultry_df, group = factor(type_of_meat), color = factor(type_of_meat)), size = 2, alpha = 1.0)+ # First 5 Main line in plot.
+  geom_line(data = raw_sales, aes ( x= year, y = poultry_df, group = factor(type_of_meat), color = factor(type_of_meat)), size = 2, alpha = 1.0)+ # First 5 Main line in plot.
   
 #Raw_sales_beef
-geom_line(data = raw_sales_beef, aes(x = Year, y = poultry_df, group = 1), color = "grey", size = 1, alhpa = 0.7)+ # Adding another grey line on top of previous line kind of geom_smooth on raw_sales_beef
+geom_line(data = raw_sales_beef, aes(x = year, y = poultry_df, group = 1), color = "grey", size = 1, alhpa = 0.7)+ # Adding another grey line on top of previous line
+ 
+#Raw_sales_chicken
+geom_line(data = raw_sales_chicken, aes(x = year, y = poultry_df, group = 1), color = "green4", size = 1, alpha = 0.7)+
+
+# Raw_sales_pork
+geom_line(data = raw_sales_pork, aes(x = year, y = poultry_df, group = 1 ), color = "grey", size = 1, alpha = 0.7)+ # Adding another grey line on top of previous line.
   
-# Raw_sales_chicken
-geom_line(data = raw_sales_chicken, aes(x = Year, y = poultry_df, group = 1), color = "green4", size = 1, alpha = 0.7)+
-
-#Raw_sales_broilers : We can basically ignore broilers intersection with beef, pork as broilers and chicken are parallel to one another.
-  
-#Raw_sales_pork
-geom_line(data = raw_sales_pork, aes(x = Year, y = poultry_df, group = 1 ), color = "grey", size = 1, alpha = 0.7)+ # Adding another grey line on top of previous line kind of geom_smooth on raw_sales_pork
-  
-# Raw_sales_Turkey & Raw_sales_seafood data we can look into seperate graph as it will be worthless to compare against chicken, beef or pork.
-
-# Adding geom_point (Intersection dot )
-geom_point(aes(x= 1973, y = 81), size = 4, color = 'red')+ # The value x= 1973 and y= 81 is from looking at graph and adding big red dot(POINT)
-geom_point(aes (x= 1992, y = 66), size = 4, color = 'green4')+ # Intersection of chicken and beef
-geom_point(aes (x = 1982,  y= 47), size = 4, color = 'green')+
-
-
-# Lets add some text in graph
+#Lets add some text in graph
 geom_text(aes (x = 1965, y = 100), label = "Beef_Shortage: 1973", hjust = 0, color = 'red', fontface = "bold")+
-geom_text(aes (x = 1965, y = 110), label = "Crop crisis directly impact beef supply", hjust = 0, color = 'red')+
+geom_text(aes (x = 1975, y = 115), label = "Crop crisis directly impact beef supply", hjust = 0, color = 'red')+
 geom_text(aes (x = 1984, y = 28), label = "Chicken surpasses Pork: 1982", fontface = "bold")+
 geom_text(aes(x = 2000, y =42), label = "Pork remain stable", color = 'blue3')+
 geom_text(aes(x= 2000, y = 95), label = "Chicken outpace beef : 1992", fontface = "bold", size =4)+
-geom_text(aes(x = 2003, y = 8), label = "Seafood and Turkey have gain slight market", fontface = "bold", size = 4)+
-
-# Lets label Chicken, pork ,beef, Turkey, broilers and Beef POSITION
+geom_text(aes(x = 2003, y = 8), label = "Seafood and Turkey gain slight market", fontface = "bold", size = 4)+
+  
+# label position
 # Usually we all read left to right so if you are setting up trend line label prefarably on left.
 geom_text(aes(x= 1962,  y = 78), label = "Beef", color = 'red3', fontface = "bold", size = 4)+
 geom_text(aes(x= 1962,  y = 20), label = "Chicken", color = 'green3', fontface = "bold", size = 4)+
@@ -181,171 +275,130 @@ geom_text(aes(x= 1962,  y = 42), label = "Broilers", color = 'yellow3', fontface
 geom_text(aes(x= 1962,  y = 50), label = "Pork", color = 'blue3', fontface = "bold", size = 4)+
 geom_text(aes(x= 1962,  y = 14), label = "Turkey", color = 'pink3', fontface = "bold", size = 4)+
 geom_text(aes(x= 1962,  y = 3), label = "Seafood", color = 'purple3', fontface = "bold", size = 4)+
-  
-## Segment : Adding line or we can say connecting comment with linegraph.
+
+#Segment: Adding line or we can say connecting comment with linegraph.
 geom_segment(aes(x = 1973, y= 80, xend = 1973, yend = 100), size = .5, color = 'red')+
 geom_segment(aes(x = 1992, y= 65, xend = 1992, yend = 93), size = .5, color = 'black')+
 geom_segment(aes(x = 1982, y= 47, xend = 1982, yend = 28), size = .5, color = 'black')+ 
-
-## geom_point ( Till 2017 as 2018 is being continued)
-geom_point(aes(x= 2017, y = 56.5), size = 3, color = "red4")+ # Adding final dot at the end representing till 2017 analysis for Beef
+  
+## geom_point (Final dot:Till 2017 as 2018 is being continued)
+geom_point(aes(x= 2017, y = 56.5), size = 3, color = "red4")+ 
 geom_point(aes(x = 2017, y = 56.5), size = 4, color = "grey", alpha = 0.4)+
-geom_point(aes(x= 2017, y = 92), size = 3, color = "green4")+ # Adding final dot at the end for Chicken
+geom_point(aes(x= 2017, y = 92), size = 3, color = "green4")+ 
 geom_point(aes(x = 2017, y = 92), size = 4, color = "grey", alpha = 0.4)+
-geom_point(aes(x= 2017, y = 92), size = 3, color = "yellow4")+ # Adding final dot at the end for Broilers
+geom_point(aes(x= 2017, y = 92), size = 3, color = "yellow4")+ 
 geom_point(aes(x = 2017, y = 92), size = 4, color = "grey", alpha = 0.4)+
-geom_point(aes(x= 2017, y = 50.5), size = 3, color = "blue")+ # Adding final dot at the end for Pork
+geom_point(aes(x= 2017, y = 50.5), size = 3, color = "cyan")+ 
 geom_point(aes(x = 2017, y = 50.5), size = 4, color = "grey", alpha = 0.4)+
-geom_point(aes(x= 2016, y = 14), size = 3, color = "pink")+ # Adding final dot at the end for turkey 
-geom_point(aes(x= 2017, y = 16), size = 3, color = "purple")+ # Adding final dot at the end for seafood
+geom_point(aes(x= 2016, y = 14), size = 3, color = "pink")+ 
+geom_point(aes(x= 2017, y = 16), size = 3, color = "purple")+ 
 
-  
-# Adding continous scale
-scale_y_continuous(breaks = c(0,15,30, 45, 60, 75, 90, 105, 120))+
-scale_x_continuous(breaks = c(1960, 1970, 1980, 1990, 2000, 2010, 2020))+
-
-# Adjusting uniform parameters
-geom_hline(yintercept = 0, size = 1)+ # Adds a black solid line on X-axis and starts from 0
-scale_color_manual(values = c("red","green4","yellow","blue", "pink", "purple")) + # Switch around and the color of meat changes according to position.
-  
-
-
-# Title
-labs(title = "Chicken consumption has outsupplied Beef and Pork and continues to grow", # Main Tittle
+labs(title = "Chicken consumption has outsupplied Beef and Pork", # Main Tittle
      subtitle = "From year 1986 Consumption of beef has declined tremendously", # sub- title
-     caption = "Source: National Chicken Council | Source:USDA", # look at bottom
-     x = 'Years', y = "Consumed meats in Pounds") + # X -label & Y-label
+     caption = "Source: National Chicken Council | Source:USDA")+
   
-# Theme
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"))+
-theme(legend.position = "none",
-          plot.title = element_text(size = 12, face = "bold"), # makes heading bold
-          plot.subtitle = element_text(size = 10), # makes subheading bold
-      
-          axis.title.x = element_text(size = 10, face = "bold"), # word Year
-          axis.title.y = element_text(size = 10, face = "bold"), # word consumed meats in pound
-        
-          axis.text.x = element_text(size = 8, face = "bold"), # X-axis label year 
-          axis.text.y = element_text(size = 8)) # Y-axis label 0-100
-
-# Lets save the graph
-ggsave("chkn_vs_beef_pork.png", g_sales, width = 12, height = 18, units = "in")
-  ###
-  
-g_sales
+theme_fivethirtyeight()
+ggplotly(g_sales)
 ```
-# Analysis:
 
-1. Year 1973 : Beef Shortage
+ **Analysis:**
+
+1. year 1973 : Beef Shortage
 2. Chicken and Broilers growth continues. They both go hand in hand. No any strange pattern.
 3. The First Global Energy Crisis of 1973-1974 where consumption of beef took a hit.
-4. We can see drop in pork market share as well but chicken consumption thrive to grow.
-5. Seafood and Turkey consumption didn't get affected but in recent years it is still consuming the market.
-```{r}
-```
-# Lets plot another graph based on seafood and Turkey comparison.
-```{r}
-head(poultry_df, 3)
-```
+4. We can see drop in pork market share  but chicken consumption thrive to grow.
+5. Seafood and Turkey consumption didn't get affected but in recent years it is still in lower end consumption rate in the market. Most of the fresh seafood are found near the coastal region. Also they are expensive than chicken and beef thats why we see less consumption of seafood in USA market. 
+
+# **Comparing Seafood and Turkey**
+
+```{r, message= FALSE, warning= FALSE}
 # Lets focus on this time seafood and turkey
-```{r}
 seafood_turkey_data<- poultry_df %>% 
               select(-c(11:13)) %>% 
               gather("type_of_meat", "poultry_df", 6:7)
-head(seafood_turkey_data)
 
-# Data
+kable(head(seafood_turkey_data,10)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(10:10, bold = T, color = "white", background = "black") %>% 
+  scroll_box(width = "800px", height = "200px")
+```
+
+
+```{r, message= FALSE, warning= FALSE}
 g_seafood_turkey <- ggplot()+
-  geom_line(data = seafood_turkey_data, aes ( x= Year, y = poultry_df, group = factor(type_of_meat), color = factor(type_of_meat)), size = 2, alpha = 1.0)+
+  geom_line(data = seafood_turkey_data, aes ( x= year, y = poultry_df, group = factor(type_of_meat), color = factor(type_of_meat)), size = 2, alpha = 1.0)+
   
 # Adding geom_point [Intersection]
-geom_point(aes(x= 1987.8, y = 15.3), size = 4, color = 'grey')+ # The value x= 1973 and y= 81 is from looking at graph and adding big red dot(POINT)
+geom_point(aes(x= 1987.8, y = 15.3), size = 4, color = 'grey')+ 
   
 # Lets add some text in graph
 geom_text(aes (x = 1985, y = 20), label = "Turkey surpass Seafood consumption: 1987", hjust = 0, color = 'red', fontface = "bold")+
   
 # Lets label 
-geom_text(aes(x= 1962,  y = 5), label = "Turkey", color = 'pink3', fontface = "bold", size = 4)+ # Turkey
-geom_text(aes(x= 1962,  y = 9), label = "Seafood", color = 'purple3', fontface = "bold", size = 4)+ # Seafood
-
+geom_text(aes(x= 1962,  y = 5), label = "Turkey", color = 'pink3', fontface = "bold", size = 4)+ 
+geom_text(aes(x= 1962,  y = 9), label = "Seafood", color = 'purple3', fontface = "bold", size = 4)+ 
+  
 ## Segment : Adding line or we can say connecting comment with linegraph.
 geom_segment(aes(x = 1988, y= 15.5, xend = 1988, yend = 19.5), size = .5, color = 'black')+
   
 ## geom_point [Till year 2017]
-geom_point(aes(x= 2017, y = 16.5), size = 2.0, color = "black")+ # Adding final dot at the end
+geom_point(aes(x= 2017, y = 16.5), size = 2.0, color = "black")+ 
 geom_point(aes(x = 2016.1, y = 14.5), size = 2.0, color = "black")+
   
 # Adding continous scale
 scale_y_continuous(breaks = c(0,2,4,6,8,10,12,14,16,18,20))+
 scale_x_continuous(breaks = c(1960, 1970, 1980, 1990, 2000, 2010, 2020))+
-
+  
 # Adjusting uniform parameters
 geom_hline(yintercept = 0, size = 1)+ # Adds a black solid line on X-axis and starts from 0
-scale_color_manual(values = c( "purple", "pink")) + # Switch around and the color of meat changes according to position.
-
+scale_color_manual(values = c( "cyan", "pink")) + # Switch around and the color of meat changes according to position.
 # Title
 labs(title = "Seafood and Turkey are uneffected by Chicken consumption growth", # Main Tittle
      subtitle = "Turkey and Seafood are doing equal in a market", # sub- title
-     caption = "Source: National Chicken Council | Source:USDA", # look at bottom
-     x = 'Years', y = "Consumed meats in Pounds") + # X -label & Y-label
-  
-# Theme
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black"))+ 
-theme(legend.position = "none",
-          plot.title = element_text(size = 14, face = "bold"), # makes heading bold
-          plot.subtitle = element_text(size = 12), # makes subheading bold
-      
-          axis.title.x = element_text(size = 10, face = "bold"), # word Year
-          axis.title.y = element_text(size = 10, face = "bold"), # word consumed meats in pound
-        
-          axis.text.x = element_text(size = 8, face = "bold"), # X-axis label year 
-          axis.text.y = element_text(size = 8)) # Y-axis label 0-100
+     caption = "Source: National Chicken Council | Source:USDA") + #, # look at bottom
+     # x = 'years', y = "Consumed meats in Pounds") + # X -label & Y-label
 
-# Lets save the graph
-ggsave("turkey_vs_seafood.png", g_sales, width = 12, height = 18, units = "in")
-
-g_seafood_turkey
-
+theme_fivethirtyeight()  
+ggplotly(g_seafood_turkey)
 ```
-# Analysis of Turkey and Seafood
+
+**Analysis**
 
 * we don't have future data for Seafood. Data until 2016
 * Seems like most of people in USA doesnt consume seafood or Turkey
 * Turkey might be consumed more on thanksgiving day 
 * Seafood might be consumed only in Coast line. East-coast or west coastline. 
-* Nothing so much in middle of country as It's not so fresh as well as price do play a factor
-```{r}
-```
-# PRICE Analysis
+* Nothing so much in middle of country as It's not so fresh as well as price do play a factor.
 
-# Wholesale and Retail Prices for Chicken (Broilers), Beef ,Pork
-** We don't have a price for seafood or turkey to compare
-this can be extracted from the same website 
+*Price Analysis*
+- Wholesale and Retail Prices for Chicken (Broilers), Beef ,Pork
+- We don't have a price for seafood or turkey to compare.
 ```{r}
 url2 <- "https://www.nationalchickencouncil.org/about-the-industry/statistics/wholesale-and-retail-prices-for-chicken-beef-and-pork/"
-
 price_list <- read_html(url2) %>% 
               html_table()
 ```
-NOTE Wholesale beef price is wholesale choice grade value adjusted to wholesale weight equivalent using a coefficient of 1.142 (1.1428 for 2000 on). Wholesale pork price is wholesale value adjusted to wholesale weight equivalent using coefficient of 1.06 (1.04 for 2000 on). Retail prices for choice beef and pork are weighted composite prices as used by USDA in their farm to retail price spread series. Wholesale and retail broiler price are composite prices of parts from 1990 forward. USDA’s New York wholesale whole-carcass broiler price from 1960 to 1963; from 1964 to May 1983 USDA’s 9 city composite wholesale broiler price used from June 1983 to 1989 USDA’s 12-city wholesale, whole-carcass composite price used.
+**NOTE**
+
+Wholesale beef price is wholesale choice grade value adjusted to wholesale weight equivalent using a coefficient of 1.142 (1.1428 for 2000 on). Wholesale pork price is wholesale value adjusted to wholesale weight equivalent using coefficient of 1.06 (1.04 for 2000 on). Retail prices for choice beef and pork are weighted composite prices as used by USDA in their farm to retail price spread series. Wholesale and retail broiler price are composite prices of parts from 1990 forward. USDA’s New York wholesale whole-carcass broiler price from 1960 to 1963; from 1964 to May 1983 USDA’s 9 city composite wholesale broiler price used from June 1983 to 1989 USDA’s 12-city wholesale, whole-carcass composite price used.
 ```{r}
 price_df <- data.frame(price_list[[1]]) # we dont need to provide [[1]] as there is only one list but we have more than that then we need to specify.
-head(price_df)
-dim(price_df) # 49 Rows 7 column
-colnames(price_df)
 ```
-# Lets look at stat
+
+# **Skim the price**
 ```{r}
+# Lets look at stat
 skim(price_df)
 ```
-# Let's fix some columns by renaming it
-First two rows are just header so we can slice data from 3rd row.
+
 ```{r}
+# Let's fix some columns by renaming it
+# First two rows are just header so we can slice data from 3rd row.
+# As we want to name wholesales price according to the category its better to rename than use janitor package
 price_df <- price_df %>% 
           slice(3:49) %>% 
-          rename(Year = Var.1, 
+          rename(year = Var.1, 
                  Beef_wholesale_price = WHOLESALE.PRICE, 
                  Pork_wholesale_price = WHOLESALE.PRICE.1, 
                  Chicken_wholesale_price = WHOLESALE.PRICE.2,
@@ -353,40 +406,52 @@ price_df <- price_df %>%
                  Pork_retail_price = RETAIL.PRICE.1,
                  Chicken_retail_price = RETAIL.PRICE.2
                  )
-head(price_df, 3)
-```
-# Lets fix the year column
-```{r}
-price_df$Year <- gsub("[^0-9]","",price_df$Year)
-tail(price_df)
-class(price_df$Year)
-```
-# Lets fix the year column 
-```{r}
-price_df$Year <- as.numeric(price_df$Year)
-class(price_df$Year)
+
 ```
 
-# Modify_at
+```{r, include= FALSE}
+#  Lets fix the year column
+price_df$year <- gsub("[^0-9]","",price_df$year)
+tail(price_df)
+class(price_df$year)
+
+## Lets fix the year column 
+price_df$year <- as.numeric(price_df$year)
+class(price_df$year)
+```
+
+
 ```{r}
+# plot for sales of each meat over time
+# type_of_meat is character so we have to factor before we plot.
+# size : width of line
+# alpha : Transperancy of line
+
 price_df <- price_df%>% 
-            select(Year,Beef_retail_price, Pork_retail_price, Chicken_retail_price) %>%  # retail_price
+            select(year,Beef_retail_price, Pork_retail_price, Chicken_retail_price) %>%  # retail_price
             modify_at(c(1,2,3,4), as.numeric) %>% # Modify at need to know and explain
             gather("type_of_meat", "price", 2:4) %>% 
             mutate(price_dollar = price/100) # cents per lb. on a wholesale weight so we have now $ price
-head(price_df)
+
+kable(head(poultry_df,10)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(10:10, bold = T, color = "white", background = "black") %>% 
+  scroll_box(width = "800px", height = "200px")
 ```
-# plot for sales of each meat over time
-* type_of_meat is character so we have to factor before we plot.
-* size : width of line
-* alpha : Transperancy of line
+
+
 ```{r}
-tail(price_df)
+kable(tail(price_df,10)) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed","responsive", full_width = F, position = "left", font_size = 7)) %>%
+  column_spec(1, width = "30em", background = "lightcyan") %>% 
+  row_spec(10:10, bold = T, color = "white", background = "black") %>% 
+  scroll_box(width = "800px", height = "200px")
 ```
 
 ```{r}
 g_price <- ggplot()+
-  geom_line(data = price_df, aes(x = Year, y= price_dollar, group = factor(type_of_meat), color = factor(type_of_meat)), size =2, alpha = 0.7)+
+  geom_line(data = price_df, aes(x = year, y= price_dollar, group = factor(type_of_meat), color = factor(type_of_meat)), size =2, alpha = 0.7)+
   
 # Adding geom_point at the end
 geom_point(aes(x = 2017, y = 5.92), size = 3, color = "red") +
@@ -397,7 +462,8 @@ geom_point(aes(x = 2017, y = 1.90), size = 3, color = "green4")+
 geom_text(aes(x = 2011, y = 6.5), label = "Beef - $5.85", color = "red", fontface = "bold", size = 4) +
 geom_text(aes(x = 2011, y = 2.5), label = "Pork - $3.78", color = "blue", fontface = "bold", size = 4) +
 geom_text(aes(x = 2011, y = 1.1), label = "Chicken - $1.96", color = "green4", fontface = "bold", size = 4) +
-# Lets add some text in graph
+  
+# text in graph
 geom_text(aes (x = 1995, y = 5), label = "2000 :Beef @ 3.00", hjust = 0, color = 'red', fontface = "bold")+
   
 ## Segment : Adding line or we can say connecting comment with linegraph.
@@ -406,8 +472,8 @@ geom_segment(aes(x = 2000, y= 4.9, xend = 2000, yend = 3.2), size = .5, color = 
 # Title  
 labs(title = "Price of chicken is rising compare to falling price of Pork and Beef ",
 subtitle = "Price of beef is falling down because of less consumption",
-caption = "Source: National Chicken Council                                           Source : USDA",
-x = "Years", y = "PRICE PER POUND ($)") +
+caption = "Source: National Chicken Council                                           Source : USDA") +#,
+#x = "years", y = "PRICE PER POUND ($)") +
   
 # Setting up parameters  
 scale_y_continuous(breaks = seq(0, 6, 1)) +
@@ -416,43 +482,31 @@ geom_hline(yintercept = 0, size = 1) +
 xlab("") +
 ylab("Dollar per lb of meat") +
 scale_color_manual(values = c("red", "green4", "blue")) +
-  
-# Theme  
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-theme(legend.position = "none",
-          plot.title = element_text(size = 14, face = "bold"),
-          plot.subtitle = element_text(size = 12),
-          axis.title.x = element_text(size = 12),
-          axis.title.y = element_text(size = 12),
-          axis.text.x = element_text(size = 10),
-          axis.text.y = element_text(size = 10))
-          
-g_price
+theme_fivethirtyeight()
+ggplotly(g_price)
 ```
-# Analysis
-* We don't have price for Seafood and Turkey.
-* price of Beef has almost doubled in past 20 years
-* Consumption of beef is falling down from 2015.
-* From 2000 beef has been consumed more than chicken
+ 
+ **Analysis**
+- We don't have price for Seafood and Turkey.
+- price of Beef has almost doubled in past 20 years
+- Consumption of beef is falling down from 2015.
+- From 2000 beef has been consumed more than chicken
 ```{r}
 percent_poultry_df <- poultry_df %>% 
-                    select(Year, 8:13) %>%  # We will select Year, and percentage change in poultry products
-                    rename(Beef_p = percent_change_Beef, 
-                           Pork_p = percent_change_Pork,
-                           broilers_p = percent_change_Broilers,
-                           Chicken_p = percent_change_Chicken,
-                           Turkey_p = percent_change_Turkey,
-                           Seafood_p = percent_change_Seafood ) %>%  # Lets create a simple name so that its clear and crisp. and also we are just selecting column 6 to 10 that is with percentage.
+                    select(year, 8:13) %>%  # We will select year, and percentage change in poultry products
+                    rename(Beef_p = pcnt_change_beef, 
+                           Pork_p = pcnt_change_pork,
+                           broilers_p = pcnt_change_broilers,
+                           Chicken_p = pcnt_change_chicken,
+                           Turkey_p = pcnt_change_turkey,
+                           Seafood_p = pcnt_change_seafood ) %>%  # Lets create a simple name so that its clear and crisp. and also we are just selecting column 6 to 10 that is with percentage.
                           gather("type_of_meat", "change_in_percent", 2:7)
-head(percent_poultry_df, 10) # See it gather according type of meat.
-tail(percent_poultry_df, 10) # See it gather according type of meat.
 ```
-# Percent consumption change Graph
-```{r}
-g_pcnt <- ggplot()+
-  geom_line(data = percent_poultry_df, aes(x = Year, y = change_in_percent, group = factor(type_of_meat), color = factor(type_of_meat)), size = .5)+
 
+# **Percent consumption change Graph**
+```{r, message= FALSE, warning= FALSE}
+g_pcnt <- ggplot()+
+  geom_line(data = percent_poultry_df, aes(x = year, y = change_in_percent, group = factor(type_of_meat), color = factor(type_of_meat)), size = .5)+
 # Lets label Chicken, pork ,beef, Turkey, broilers and Beef POSITION
 geom_text(aes(x= 2018,  y = 6), label = "Beef", color = 'red3', fontface = "bold", size = 4)+
 geom_text(aes(x= 2018,  y = 300), label = "Chicken", color = 'green3', fontface = "bold", size = 4)+
@@ -460,10 +514,9 @@ geom_text(aes(x= 2018,  y = 250), label = "Broilers", color = 'yellow3', fontfac
 geom_text(aes(x= 2018,  y = -25), label = "Pork", color = 'blue3', fontface = "bold", size = 4)+
 geom_text(aes(x= 2018,  y = 60), label = "Turkey", color = 'pink3', fontface = "bold", size = 4)+
 geom_text(aes(x= 2018,  y = 180), label = "Seafood", color = 'purple3', fontface = "bold", size = 4)+
-
 scale_y_continuous(breaks = seq(0, 300, 50)) +
 scale_x_continuous(breaks = seq(1960, 2020, 5)) + 
-
+  
 # Adjusting uniform parameters
 scale_color_manual(values = c("red","green4","yellow","blue", "pink", "purple")) + # Switch around and the color of meat changes according to position.
 geom_hline(yintercept = 0, size = 1, color = "black", alpha = 0.5) +  # Adds a black solid line on X-axis and starts from 0
@@ -471,27 +524,14 @@ xlab("") +
 ylab("Percent") +
   
 # Title
-labs(title = "Change in percentage consumption of poultry products over course of year", # Main Tittle
-     caption = "Source: National Chicken Council | Source:USDA", # look at bottom
-     x = 'Years', y = "Consumed meats in Pounds") + # X -label & Y-label
-  
-# Theme  
-theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-panel.background = element_blank(), axis.line = element_line(colour = "black")) +
-theme(legend.position = "none",
-          plot.title = element_text(size = 12, face = "bold"), # makes heading bold
-         
-          axis.title.x = element_text(size = 10, face = "bold"), # word Year
-          axis.title.y = element_text(size = 10, face = "bold"), # word consumed meats in pound
-        
-          axis.text.x = element_text(size = 8, face = "bold"), # X-axis label year 
-          axis.text.y = element_text(size = 8)) # Y-axis label 0-100
-
-# Lets save the graph
-ggsave("pcnt_consumption.png", g_sales, width = 12, height = 18, units = "in")
-g_pcnt
+labs(title = "Change in % consumption of poultry products over year", # Main Tittle
+     caption = "Source: National Chicken Council | Source:USDA") + #, # look at bottom
+     #x = 'years', y = "Consumed meats in Pounds") + # X -label & Y-label
+theme_fivethirtyeight()
+ggplotly(g_pcnt)
 ```
-# Analysis
+
+**Analysis**
 
 1. price of pork hasn't risen and overall its is declining
 2. Price of beef has fallen down
@@ -499,10 +539,18 @@ g_pcnt
 4. Beef and pork are less favorable food of consumption.
 5. We can see huge spike in seafood in year 1985 to 1990 then it flats out.
 6. We can see the difference in what called broilers consumption and chicken consumption.
-```{r}
-```
-I hope you guys find this plot helpful in understanding so that you can plot your own graph yourself. This plot is modification on someone else work not a orginal creation but inspiration to create a plot like that in my own version.
-```{r}
-#render("chicken.Rmd", html_document(df_print = pander))
-```
 
+
+**Conclusion:**
+
+Beef consumption has been declining for the past decade, as consumers become more health conscious and choose leaner meats and vegetarian options. Red meat has been linked to heart disease and diabetes, and people perceive chicken, a white meat, to be a healthier option.  The shift toward healthier dietary habits is only one piece of the puzzle, however.
+Fast food companies have been putting more chicken on their menus, (McDonald’s is the second largest purchaser of chicken in the country), and restaurants saw a 12 percent jump in menu items including chicken from 2009 and 2012.
+
+While American’s are actually eating less meat overall — from chicken to beef to pork — the scale has finally tipped from greater consumption of beef to greater consumption of chicken. In 2012, Americans were eating almost 60 pounds of chicken per person each year.  Chicken has become such a staple of the American diet that it’s hard to imagine a time when we weren’t eating much of it at all. The change has been dramatic, however. In the 1950s, Americans ate an average of 16 pounds of chicken per person every year. By 2000, that number grew to 53 pounds per year[ External Source]
+
+
+Thank you for Reading the Post.Hope you enjoyed reading as much as “fun” I had making it.
+
+🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏�
+
+🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏
