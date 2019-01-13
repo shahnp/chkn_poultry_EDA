@@ -91,7 +91,7 @@ Fast food companies have been putting more chicken on their menus, (McDonald’s
 While American’s are actually eating less meat overall — from chicken to beef to pork — the scale has finally tipped from greater consumption of beef to greater consumption of chicken. In 2012, Americans were eating almost 60 pounds of chicken per person each year.  Chicken has become such a staple of the American diet that it’s hard to imagine a time when we weren’t eating much of it at all. The change has been dramatic, however. In the 1950s, Americans ate an average of 16 pounds of chicken per person every year. By 2000, that number grew to 53 pounds per year[ External Source]
 
 
-Thank you for Reading the Post.Hope you enjoyed reading as much as “fun” I had making it.
+Thank you for Reading the Post.Hope you enjoyed reading as much as “fun” I had making it.Check out the Pdf for quick analysis without running the whole markdown.
 
 🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏🙏�
 
